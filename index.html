@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YONO SBI – Net Banking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #1a2b5f; --navy-mid: #22367a; --teal: #009eb4; --teal-light: #00c4d8;
+      --crimson: #c0392b; --gold: #e8a020; --off-white: #f4f7fc; --card: #ffffff;
+      --text-dark: #1a2235; --text-mid: #4a5578; --text-soft: #8a96b4; --border: #dde4f0;
+      --green: #1a7a4a; --red: #c0392b;
+    }
+    html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--off-white); color: var(--text-dark); overflow-x: hidden; }
+
+    .ticker-wrap { background: var(--navy); color: #a8c4f0; font-size: 12px; padding: 6px 0; overflow: hidden; white-space: nowrap; }
+    .ticker-track { display: inline-block; animation: ticker 28s linear infinite; }
+    .ticker-track span { padding: 0 60px; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    header { background: var(--card); border-bottom: 3px solid var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 14px 36px; box-shadow: 0 2px 12px rgba(26,43,95,0.08); position: sticky; top: 0; z-index: 100; }
+    .logo-block { display: flex; align-items: center; gap: 12px; }
+    .logo-circle { width: 44px; height: 44px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: white; box-shadow: 0 0 0 3px rgba(0,158,180,0.25); }
+    .logo-text .yono { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--crimson); }
+    .logo-text .sbi  { font-size: 22px; font-weight: 700; color: var(--navy); letter-spacing: 2px; }
+    .logo-text .sub  { font-size: 10px; color: var(--text-soft); letter-spacing: 2px; text-transform: uppercase; }
+    nav a { text-decoration: none; font-size: 13px; font-weight: 500; color: var(--text-mid); margin-left: 24px; }
+    nav a:hover { color: var(--navy); }
+
+    .alert-banner { background: linear-gradient(90deg,#fff9ed,#fff3e0); border-left: 4px solid var(--gold); margin: 20px 36px; padding: 12px 18px; border-radius: 6px; font-size: 12.5px; color: #6b4c00; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+
+    main { display: flex; align-items: flex-start; justify-content: center; gap: 36px; padding: 0 36px 48px; flex-wrap: wrap; }
+
+    .login-card { background: var(--card); border-radius: 16px; box-shadow: 0 8px 40px rgba(26,43,95,0.13); width: 100%; max-width: 440px; padding: 40px 40px 36px; animation: riseUp .55s cubic-bezier(.22,.68,0,1.2) both; border-top: 4px solid var(--navy); }
+    @keyframes riseUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+
+    .card-header { text-align: center; margin-bottom: 28px; }
+    .card-header .tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--teal); background: rgba(0,158,180,0.09); padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; }
+    .card-header h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--navy); }
+    .card-header p  { font-size: 13px; color: var(--text-soft); margin-top: 5px; }
+
+    .mode-row { display: flex; background: var(--off-white); border-radius: 10px; padding: 4px; margin-bottom: 26px; gap: 4px; }
+    .mode-btn { flex: 1; padding: 9px 0; border: none; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-mid); cursor: pointer; transition: all .2s; }
+    .mode-btn.active { background: var(--navy); color: white; box-shadow: 0 2px 8px rgba(26,43,95,0.25); }
+
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 11.5px; font-weight: 600; letter-spacing: 0.6px; color: var(--text-mid); text-transform: uppercase; margin-bottom: 7px; }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon { position: absolute; left: 13px; font-size: 16px; color: var(--text-soft); pointer-events: none; }
+    .input-wrap:focus-within .input-icon { color: var(--teal); }
+    input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+      width: 100%; padding: 12px 42px; border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text-dark);
+      background: var(--off-white); transition: border-color .2s, box-shadow .2s, background .2s; outline: none;
+    }
+    input:focus { border-color: var(--teal); background: white; box-shadow: 0 0 0 3px rgba(0,158,180,0.12); }
+    .eye-btn { position: absolute; right: 13px; background: none; border: none; cursor: pointer; font-size: 17px; color: var(--text-soft); padding: 0; }
+    .eye-btn:hover { color: var(--navy); }
+
+    .row-between { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-mid); cursor: pointer; }
+    input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--navy); cursor: pointer; }
+    .forgot-link { font-size: 13px; color: var(--teal); text-decoration: none; font-weight: 500; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .captcha-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .captcha-box { flex: 0 0 auto; background: linear-gradient(135deg, #1a2b5f, #22367a); border-radius: 8px; padding: 10px 16px; font-family: 'Playfair Display', serif; font-size: 20px; letter-spacing: 4px; color: #a8c4f0; user-select: none; }
+    .captcha-input { flex: 1; }
+    .refresh-btn { background: none; border: 1.5px solid var(--border); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; font-size: 15px; color: var(--text-mid); display: flex; align-items: center; justify-content: center; transition: all .2s; }
+    .refresh-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+    .btn-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); color: white; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; transition: all .25s; box-shadow: 0 4px 18px rgba(26,43,95,0.35); }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,43,95,0.4); }
+
+    .toast { position: fixed; top: 80px; right: 24px; padding: 14px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; color: white; z-index: 999; opacity: 0; transform: translateX(40px); transition: all .35s; pointer-events: none; max-width: 320px; line-height: 1.5; }
+    .toast.show { opacity: 1; transform: translateX(0); }
+    .toast.success { background: #1a7a4a; }
+    .toast.error   { background: #c0392b; }
+
+    .strength-bar { height: 4px; border-radius: 2px; margin-top: 6px; background: var(--border); transition: all .3s; }
+    .strength-bar.weak   { background: #c0392b; width: 33%; }
+    .strength-bar.medium { background: var(--gold); width: 66%; }
+    .strength-bar.strong { background: #1a7a4a; width: 100%; }
+    .strength-label { font-size: 11px; margin-top: 4px; }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--text-soft); font-size: 12px; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .quick-link { display: flex; align-items: center; gap: 9px; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; text-decoration: none; font-size: 12.5px; font-weight: 500; color: var(--text-mid); background: var(--off-white); transition: all .2s; }
+    .quick-link:hover { border-color: var(--teal); color: var(--navy); background: white; }
+
+    .info-panel { width: 100%; max-width: 300px; animation: riseUp .55s .15s cubic-bezier(.22,.68,0,1.2) both; }
+    .info-card { background: var(--card); border-radius: 14px; padding: 22px; box-shadow: 0 4px 20px rgba(26,43,95,0.08); margin-bottom: 16px; }
+    .info-card h3 { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; display: inline-block; }
+    .info-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--off-white); }
+    .info-item:last-child { border-bottom: none; }
+    .info-item-icon { width: 34px; height: 34px; flex-shrink: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .blue { background: rgba(0,158,180,0.1); } .navy2 { background: rgba(26,43,95,0.08); } .redg { background: rgba(192,57,43,0.08); } .goldg { background: rgba(232,160,32,0.1); }
+    .info-item-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
+    .info-item-text span { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+    .help-card { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); border-radius: 14px; padding: 22px 24px; color: white; }
+    .help-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .help-card p  { font-size: 12px; opacity: .7; margin-bottom: 12px; }
+    .help-number  { font-size: 20px; font-weight: 700; color: var(--teal-light); margin-bottom: 10px; }
+    .help-card a  { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; text-decoration: none; font-size: 12px; font-weight: 500; margin-right: 6px; margin-bottom: 4px; }
+    .help-card a:hover { background: rgba(255,255,255,0.25); }
+
+    /* Dashboard */
+    #dashboard { display: none; animation: riseUp .5s ease both; }
+    .dash-header { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); color: white; padding: 30px 36px; }
+    .dash-header h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 4px; }
+    .dash-header p  { font-size: 13px; opacity: .7; }
+    .dash-body { padding: 30px 36px; max-width: 780px; margin: 0 auto; }
+    .dash-card { background: white; border-radius: 14px; padding: 22px 24px; margin-bottom: 18px; box-shadow: 0 4px 18px rgba(26,43,95,0.09); }
+    .dash-card h3 { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .user-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--off-white); font-size: 14px; }
+    .user-row:last-child { border-bottom: none; }
+    .user-row .key { color: var(--text-soft); font-weight: 500; }
+    .user-row .val { color: var(--text-dark); font-weight: 600; }
+    .users-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .users-table th { background: var(--off-white); padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-mid); }
+    .users-table td { padding: 10px 12px; border-bottom: 1px solid var(--off-white); }
+    .users-table tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: rgba(0,158,180,0.12); color: var(--teal); }
+    .btn-logout { padding: 10px 22px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; color: white; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
+    .btn-logout:hover { background: rgba(255,255,255,0.25); }
+    .btn-delete { padding: 5px 12px; background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.2); border-radius: 6px; color: var(--red); font-size: 12px; cursor: pointer; transition: all .2s; }
+    .btn-delete:hover { background: var(--red); color: white; }
+
+    footer { background: var(--navy); color: rgba(168,196,240,0.7); text-align: center; padding: 18px; font-size: 12px; }
+    footer a { color: var(--teal-light); text-decoration: none; margin: 0 10px; }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; } nav { display: none; }
+      main { padding: 0 14px 36px; } .alert-banner { margin: 14px 14px; }
+      .login-card { padding: 26px 18px; } .info-panel { max-width: 100%; }
+      .dash-body { padding: 18px 14px; } .dash-header { padding: 22px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span>🔒 SBI never asks for your PIN or OTP. Do not share with anyone.</span>
+    <span>📢 New: YONO Cash – Withdraw without a card at SBI ATMs.</span>
+    <span>🏦 Enhanced cybersecurity for all net banking users.</span>
+    <span>📱 Download YONO SBI app for seamless mobile banking.</span>
+    <span>🔒 SBI never asks for your PIN or OTP. Do not share with anyone.</span>
+    <span>📢 New: YONO Cash – Withdraw without a card at SBI ATMs.</span>
+    <span>🏦 Enhanced cybersecurity for all net banking users.</span>
+    <span>📱 Download YONO SBI app for seamless mobile banking.</span>
+  </div>
+</div>
+
+<header>
+  <div class="logo-block">
+    <div class="logo-circle">S</div>
+    <div class="logo-text">
+      <div style="display:flex;align-items:baseline;gap:4px;">
+        <span class="yono">Yono</span><span class="sbi">SBI</span>
+      </div>
+      <span class="sub">Net Banking</span>
+    </div>
+  </div>
+  <nav>
+    <a href="#">Personal</a><a href="#">Corporate</a><a href="#">NRI</a><a href="#">Locate Us</a><a href="#">Help</a>
+  </nav>
+</header>
+
+<!-- AUTH SECTION -->
+<div id="authSection">
+  <div class="alert-banner">
+    <span style="font-size:18px;flex-shrink:0;">⚠️</span>
+    <div><strong>Security Reminder:</strong> SBI never asks for your PIN, OTP, or Password. Any such call is from a fraudster. <strong>Do not share personal info.</strong></div>
+  </div>
+
+  <main>
+    <div class="login-card">
+      <div class="card-header">
+        <div class="tag" id="cardTag">Personal Banking</div>
+        <h2 id="cardTitle">Welcome Back</h2>
+        <p id="cardSub">Sign in to your SBI Net Banking account</p>
+      </div>
+
+      <div class="mode-row">
+        <button class="mode-btn active" id="btnLogin" onclick="setMode('login')">Login</button>
+        <button class="mode-btn" id="btnRegister" onclick="setMode('register')">New Registration</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Username / Customer ID</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="username"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password"/>
+            <button type="button" class="eye-btn" onclick="togglePwd('loginPass',this)">👁️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Enter Captcha</label>
+          <div class="captcha-row">
+            <div class="captcha-box" id="loginCaptchaBox"></div>
+            <button type="button" class="refresh-btn" onclick="refreshCaptcha('loginCaptchaBox')">🔄</button>
+            <div class="input-wrap captcha-input">
+              <span class="input-icon">🔠</span>
+              <input type="text" id="loginCaptcha" placeholder="Type captcha" maxlength="6"/>
+            </div>
+          </div>
+        </div>
+        <div class="row-between">
+          <label class="checkbox-label"><input type="checkbox" id="rememberMe" onchange="handleRemember()"/> Remember me</label>
+          <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot Password?</a>
+        </div>
+        <button class="btn-submit" onclick="doLogin()">Login →</button>
+        <div class="divider">quick access</div>
+        <div class="quick-links">
+          <a class="quick-link" href="#" onclick="setMode('register');return false;">✏️ New Registration</a>
+          <a class="quick-link" href="#">❓ How Do I?</a>
+          <a class="quick-link" href="#">🎧 Customer Care</a>
+          <a class="quick-link" href="#">🔓 Lock / Unlock</a>
+        </div>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">🧑</span>
+            <input type="text" id="regName" placeholder="Enter your full name"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="regEmail" placeholder="Enter your email address"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <div class="input-wrap">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="regMobile" placeholder="10-digit mobile number" maxlength="10"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Choose Username</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="regUser" placeholder="Create a unique username"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Create Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="regPass" placeholder="Min 8 chars, mix of letters & numbers" oninput="checkStrength(this.value)"/>
+            <button type="button" class="eye-btn" onclick="togglePwd('regPass',this)">👁️</button>
+          </div>
+          <div class="strength-bar" id="strengthBar"></div>
+          <div class="strength-label" id="strengthLabel" style="color:var(--text-soft)"></div>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regConfirm" placeholder="Re-enter your password"/>
+            <button type="button" class="eye-btn" onclick="togglePwd('regConfirm',this)">👁️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Enter Captcha</label>
+          <div class="captcha-row">
+            <div class="captcha-box" id="regCaptchaBox"></div>
+            <button type="button" class="refresh-btn" onclick="refreshCaptcha('regCaptchaBox')">🔄</button>
+            <div class="input-wrap captcha-input">
+              <span class="input-icon">🔠</span>
+              <input type="text" id="regCaptcha" placeholder="Type captcha" maxlength="6"/>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:20px;">
+          <label class="checkbox-label" style="text-transform:none;font-size:13px;letter-spacing:0;">
+            <input type="checkbox" id="agreeTerms"/>
+            I agree to the <a href="#" style="color:var(--teal)">Terms &amp; Conditions</a>
+          </label>
+        </div>
+        <button class="btn-submit" onclick="doRegister()">Create Account →</button>
+      </div>
+    </div>
+
+    <div class="info-panel">
+      <div class="info-card">
+        <h3><span class="dot"></span> Banking Services</h3>
+        <div class="info-item">
+          <div class="info-item-icon blue">💳</div>
+          <div class="info-item-text"><strong>Account Summary</strong><span>Balances, statements & history</span></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon navy2">💸</div>
+          <div class="info-item-text"><strong>Fund Transfers</strong><span>NEFT, RTGS, IMPS & UPI</span></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon redg">🧾</div>
+          <div class="info-item-text"><strong>Bill Payments</strong><span>Utilities, taxes & insurance</span></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon goldg">📈</div>
+          <div class="info-item-text"><strong>Investments</strong><span>FD, RD & Mutual Funds</span></div>
+        </div>
+      </div>
+      <div class="help-card">
+        <h4>Need Assistance?</h4>
+        <p>24×7 helpline for all queries</p>
+        <div class="help-number">1800 1111</div>
+        <a href="#">📞 Call Now</a><a href="#">💬 Live Chat</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h2 id="dashGreet">Welcome!</h2>
+        <p id="dashSub">Logged in just now</p>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div class="dash-card">
+      <h3><span class="dot"></span> Your Account Details</h3>
+      <div id="userDetails"></div>
+    </div>
+    <div class="dash-card">
+      <h3><span class="dot"></span> All Registered Users</h3>
+      <div style="overflow-x:auto;">
+        <table class="users-table">
+          <thead>
+            <tr><th>#</th><th>Name</th><th>Username</th><th>Email</th><th>Mobile</th><th>Registered</th><th>Action</th></tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="margin-bottom:8px;">
+    <a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Disclaimer</a><a href="#">Sitemap</a>
+  </div>
+  © 2025 State Bank of India. All rights reserved.
+</footer>
+
+<script>
+  // ── Helpers ───────────────────────────────────────
+  const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function genCap() { let s=''; for(let i=0;i<6;i++) s+=CHARS[Math.floor(Math.random()*CHARS.length)]; return s; }
+  function refreshCaptcha(id) { document.getElementById(id).textContent = genCap(); }
+
+  function togglePwd(id, btn) {
+    const el = document.getElementById(id);
+    el.type = el.type==='password' ? 'text' : 'password';
+    btn.textContent = el.type==='password' ? '👁️' : '🙈';
+  }
+
+  function toast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent=msg; t.className=`toast ${type} show`;
+    setTimeout(()=>t.classList.remove('show'), 3600);
+  }
+
+  function checkStrength(v) {
+    const bar=document.getElementById('strengthBar'), lbl=document.getElementById('strengthLabel');
+    if(!v){bar.className='strength-bar';lbl.textContent='';return;}
+    let s=0;
+    if(v.length>=8)s++;
+    if(/[A-Z]/.test(v))s++;
+    if(/[0-9]/.test(v))s++;
+    if(/[^A-Za-z0-9]/.test(v))s++;
+    if(s<=1){bar.className='strength-bar weak';lbl.textContent='Weak';lbl.style.color='#c0392b';}
+    else if(s<=2){bar.className='strength-bar medium';lbl.textContent='Medium';lbl.style.color='#e8a020';}
+    else{bar.className='strength-bar strong';lbl.textContent='Strong ✓';lbl.style.color='#1a7a4a';}
+  }
+
+  // ── Storage ───────────────────────────────────────
+  const getUsers   = ()=>JSON.parse(localStorage.getItem('sbi_users')||'[]');
+  const saveUsers  = u=>localStorage.setItem('sbi_users',JSON.stringify(u));
+  const setSession = u=>sessionStorage.setItem('sbi_sess',JSON.stringify(u));
+  const getSession = ()=>JSON.parse(sessionStorage.getItem('sbi_sess')||'null');
+  const clearSess  = ()=>sessionStorage.removeItem('sbi_sess');
+
+  // ── Mode ──────────────────────────────────────────
+  function setMode(mode) {
+    const isLogin = mode==='login';
+    document.getElementById('loginForm').style.display    = isLogin ? '' : 'none';
+    document.getElementById('registerForm').style.display = isLogin ? 'none' : '';
+    document.getElementById('btnLogin').classList.toggle('active', isLogin);
+    document.getElementById('btnRegister').classList.toggle('active', !isLogin);
+    document.getElementById('cardTitle').textContent = isLogin ? 'Welcome Back' : 'Create Account';
+    document.getElementById('cardSub').textContent   = isLogin ? 'Sign in to your SBI Net Banking account' : 'Register for SBI Net Banking';
+    document.getElementById('cardTag').textContent   = isLogin ? 'Personal Banking' : 'New Registration';
+  }
+
+  // ── Register ──────────────────────────────────────
+  function doRegister() {
+    const name    = document.getElementById('regName').value.trim();
+    const email   = document.getElementById('regEmail').value.trim();
+    const mobile  = document.getElementById('regMobile').value.trim();
+    const user    = document.getElementById('regUser').value.trim();
+    const pass    = document.getElementById('regPass').value;
+    const confirm = document.getElementById('regConfirm').value;
+    const cap     = document.getElementById('regCaptcha').value.trim().toUpperCase();
+    const capOk   = document.getElementById('regCaptchaBox').textContent;
+    const agree   = document.getElementById('agreeTerms').checked;
+
+    if(!name||!email||!mobile||!user||!pass||!confirm){toast('Please fill in all fields.','error');return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Enter a valid email address.','error');return;}
+    if(!/^\d{10}$/.test(mobile)){toast('Enter a valid 10-digit mobile number.','error');return;}
+    if(pass.length<8){toast('Password must be at least 8 characters.','error');return;}
+    if(pass!==confirm){toast('Passwords do not match.','error');return;}
+    if(cap!==capOk){toast('Incorrect captcha. Try again.','error');refreshCaptcha('regCaptchaBox');return;}
+    if(!agree){toast('Please accept the Terms & Conditions.','error');return;}
+
+    const users=getUsers();
+    if(users.find(u=>u.username.toLowerCase()===user.toLowerCase())){toast('Username already taken.','error');return;}
+    if(users.find(u=>u.email.toLowerCase()===email.toLowerCase())){toast('Email already registered.','error');return;}
+
+    users.push({
+      id: Date.now(), name, email, mobile,
+      username: user,
+      password: btoa(pass),
+      registeredAt: new Date().toLocaleString('en-IN')
+    });
+    saveUsers(users);
+    toast(`✅ Account created! Welcome, ${name}.`);
+    ['regName','regEmail','regMobile','regUser','regPass','regConfirm','regCaptcha'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('agreeTerms').checked=false;
+    document.getElementById('strengthBar').className='strength-bar';
+    document.getElementById('strengthLabel').textContent='';
+    refreshCaptcha('regCaptchaBox');
+    setTimeout(()=>setMode('login'), 1800);
+  }
+
+  // ── Login ─────────────────────────────────────────
+  function doLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const cap  = document.getElementById('loginCaptcha').value.trim().toUpperCase();
+    const capOk= document.getElementById('loginCaptchaBox').textContent;
+
+    if(!user||!pass){toast('Please enter username and password.','error');return;}
+    if(cap!==capOk){toast('Incorrect captcha. Try again.','error');refreshCaptcha('loginCaptchaBox');return;}
+
+    const found=getUsers().find(u=>u.username.toLowerCase()===user.toLowerCase()&&u.password===btoa(pass));
+    if(!found){toast('Invalid username or password.','error');refreshCaptcha('loginCaptchaBox');return;}
+
+    if(document.getElementById('rememberMe').checked)
+      localStorage.setItem('sbi_remember', user);
+
+    setSession(found);
+    toast(`✅ Login successful! Welcome, ${found.name}!`);
+    setTimeout(showDashboard, 1000);
+  }
+
+  function handleRemember() {
+    if(!document.getElementById('rememberMe').checked)
+      localStorage.removeItem('sbi_remember');
+  }
+
+  // ── Forgot ────────────────────────────────────────
+  function forgotPassword(e) {
+    e.preventDefault();
+    const u = prompt('Enter your registered username:');
+    if(!u) return;
+    const found=getUsers().find(x=>x.username.toLowerCase()===u.toLowerCase());
+    if(!found){toast('Username not found.','error');return;}
+    toast(`📧 Reset link sent to ${found.email.replace(/(.{2}).+(@.+)/,'$1***$2')}`);
+  }
+
+  // ── Dashboard ─────────────────────────────────────
+  function showDashboard() {
+    const s=getSession(); if(!s) return;
+    document.getElementById('authSection').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    document.getElementById('dashGreet').textContent=`Welcome, ${s.name} 👋`;
+    document.getElementById('dashSub').textContent=`Logged in as @${s.username} · ${new Date().toLocaleString('en-IN')}`;
+
+    document.getElementById('userDetails').innerHTML=`
+      <div class="user-row"><span class="key">Full Name</span><span class="val">${s.name}</span></div>
+      <div class="user-row"><span class="key">Username</span><span class="val">@${s.username}</span></div>
+      <div class="user-row"><span class="key">Email</span><span class="val">${s.email}</span></div>
+      <div class="user-row"><span class="key">Mobile</span><span class="val">${s.mobile}</span></div>
+      <div class="user-row"><span class="key">Registered</span><span class="val">${s.registeredAt}</span></div>
+    `;
+    renderUsersTable(s.id);
+  }
+
+  function renderUsersTable(currentId) {
+    const users=getUsers();
+    document.getElementById('usersTableBody').innerHTML = users.length===0
+      ? '<tr><td colspan="7" style="text-align:center;color:var(--text-soft);padding:20px;">No users registered yet.</td></tr>'
+      : users.map((u,i)=>`
+        <tr>
+          <td>${i+1}</td>
+          <td>${u.name}</td>
+          <td>@${u.username} ${u.id===currentId?'<span class="badge">You</span>':''}</td>
+          <td>${u.email}</td>
+          <td>${u.mobile}</td>
+          <td>${u.registeredAt}</td>
+          <td>${u.id!==currentId?`<button class="btn-delete" onclick="deleteUser(${u.id})">🗑 Delete</button>`:'—'}</td>
+        </tr>`).join('');
+  }
+
+  function deleteUser(id) {
+    if(!confirm('Delete this user?')) return;
+    saveUsers(getUsers().filter(u=>u.id!==id));
+    renderUsersTable(getSession().id);
+    toast('User deleted.');
+  }
+
+  function doLogout() {
+    clearSess();
+    document.getElementById('dashboard').style.display='none';
+    document.getElementById('authSection').style.display='block';
+    document.getElementById('loginUser').value='';
+    document.getElementById('loginPass').value='';
+    refreshCaptcha('loginCaptchaBox');
+    toast('Logged out securely.');
+  }
+
+  // ── Init ──────────────────────────────────────────
+  window.onload=()=>{
+    refreshCaptcha('loginCaptchaBox');
+    refreshCaptcha('regCaptchaBox');
+    const rem=localStorage.getItem('sbi_remember');
+    if(rem){ document.getElementById('loginUser').value=rem; document.getElementById('rememberMe').checked=true; }
+    if(getSession()) showDashboard();
+  };
+</script>
+</body>
+</html>
