@@ -3,247 +3,686 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YONO SBI – Net Banking</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <title>Video Player</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --navy: #1a2b5f; --navy-mid: #22367a; --teal: #009eb4; --teal-light: #00c4d8;
-      --crimson: #c0392b; --gold: #e8a020; --off-white: #f4f7fc; --card: #ffffff;
-      --text-dark: #1a2235; --text-mid: #4a5578; --text-soft: #8a96b4; --border: #dde4f0;
-      --green: #1a7a4a; --red: #c0392b;
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --panel: #16161f;
+      --border: #2a2a3a;
+      --accent: #e8ff47;
+      --danger: #ff4757;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --radius: 14px;
     }
-    html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--off-white); color: var(--text-dark); overflow-x: hidden; }
 
-    .ticker-wrap { background: var(--navy); color: #a8c4f0; font-size: 12px; padding: 6px 0; overflow: hidden; white-space: nowrap; }
-    .ticker-track { display: inline-block; animation: ticker 28s linear infinite; }
-    .ticker-track span { padding: 0 60px; }
-    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-    header { background: var(--card); border-bottom: 3px solid var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 14px 36px; box-shadow: 0 2px 12px rgba(26,43,95,0.08); position: sticky; top: 0; z-index: 100; }
-    .logo-block { display: flex; align-items: center; gap: 12px; }
-    .logo-circle { width: 44px; height: 44px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: white; box-shadow: 0 0 0 3px rgba(0,158,180,0.25); }
-    .logo-text .yono { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--crimson); }
-    .logo-text .sbi  { font-size: 22px; font-weight: 700; color: var(--navy); letter-spacing: 2px; }
-    .logo-text .sub  { font-size: 10px; color: var(--text-soft); letter-spacing: 2px; text-transform: uppercase; }
-    nav a { text-decoration: none; font-size: 13px; font-weight: 500; color: var(--text-mid); margin-left: 24px; }
-    nav a:hover { color: var(--navy); }
-
-    .alert-banner { background: linear-gradient(90deg,#fff9ed,#fff3e0); border-left: 4px solid var(--gold); margin: 20px 36px; padding: 12px 18px; border-radius: 6px; font-size: 12.5px; color: #6b4c00; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
-
-    main { display: flex; align-items: flex-start; justify-content: center; gap: 36px; padding: 0 36px 48px; flex-wrap: wrap; }
-
-    .login-card { background: var(--card); border-radius: 16px; box-shadow: 0 8px 40px rgba(26,43,95,0.13); width: 100%; max-width: 440px; padding: 40px 40px 36px; animation: riseUp .55s cubic-bezier(.22,.68,0,1.2) both; border-top: 4px solid var(--navy); }
-    @keyframes riseUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
-
-    .card-header { text-align: center; margin-bottom: 28px; }
-    .card-header .tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--teal); background: rgba(0,158,180,0.09); padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; }
-    .card-header h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--navy); }
-    .card-header p  { font-size: 13px; color: var(--text-soft); margin-top: 5px; }
-
-    .mode-row { display: flex; background: var(--off-white); border-radius: 10px; padding: 4px; margin-bottom: 26px; gap: 4px; }
-    .mode-btn { flex: 1; padding: 9px 0; border: none; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-mid); cursor: pointer; transition: all .2s; }
-    .mode-btn.active { background: var(--navy); color: white; box-shadow: 0 2px 8px rgba(26,43,95,0.25); }
-
-    .form-group { margin-bottom: 18px; }
-    label { display: block; font-size: 11.5px; font-weight: 600; letter-spacing: 0.6px; color: var(--text-mid); text-transform: uppercase; margin-bottom: 7px; }
-    .input-wrap { position: relative; display: flex; align-items: center; }
-    .input-icon { position: absolute; left: 13px; font-size: 16px; color: var(--text-soft); pointer-events: none; }
-    .input-wrap:focus-within .input-icon { color: var(--teal); }
-    input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
-      width: 100%; padding: 12px 42px; border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text-dark);
-      background: var(--off-white); transition: border-color .2s, box-shadow .2s, background .2s; outline: none;
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background-image: radial-gradient(ellipse at 20% 50%, #1a1a2e 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, #0f0f1e 0%, transparent 50%);
     }
-    input:focus { border-color: var(--teal); background: white; box-shadow: 0 0 0 3px rgba(0,158,180,0.12); }
-    .eye-btn { position: absolute; right: 13px; background: none; border: none; cursor: pointer; font-size: 17px; color: var(--text-soft); padding: 0; }
-    .eye-btn:hover { color: var(--navy); }
 
-    .row-between { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-mid); cursor: pointer; }
-    input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--navy); cursor: pointer; }
-    .forgot-link { font-size: 13px; color: var(--teal); text-decoration: none; font-weight: 500; }
-    .forgot-link:hover { text-decoration: underline; }
-
-    .captcha-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
-    .captcha-box { flex: 0 0 auto; background: linear-gradient(135deg, #1a2b5f, #22367a); border-radius: 8px; padding: 10px 16px; font-family: 'Playfair Display', serif; font-size: 20px; letter-spacing: 4px; color: #a8c4f0; user-select: none; }
-    .captcha-input { flex: 1; }
-    .refresh-btn { background: none; border: 1.5px solid var(--border); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; font-size: 15px; color: var(--text-mid); display: flex; align-items: center; justify-content: center; transition: all .2s; }
-    .refresh-btn:hover { border-color: var(--teal); color: var(--teal); }
-
-    .btn-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); color: white; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; transition: all .25s; box-shadow: 0 4px 18px rgba(26,43,95,0.35); }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,43,95,0.4); }
-
-    .toast { position: fixed; top: 80px; right: 24px; padding: 14px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; color: white; z-index: 999; opacity: 0; transform: translateX(40px); transition: all .35s; pointer-events: none; max-width: 320px; line-height: 1.5; }
-    .toast.show { opacity: 1; transform: translateX(0); }
-    .toast.success { background: #1a7a4a; }
-    .toast.error   { background: #c0392b; }
-
-    .strength-bar { height: 4px; border-radius: 2px; margin-top: 6px; background: var(--border); transition: all .3s; }
-    .strength-bar.weak   { background: #c0392b; width: 33%; }
-    .strength-bar.medium { background: var(--gold); width: 66%; }
-    .strength-bar.strong { background: #1a7a4a; width: 100%; }
-    .strength-label { font-size: 11px; margin-top: 4px; }
-
-    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--text-soft); font-size: 12px; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .quick-link { display: flex; align-items: center; gap: 9px; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; text-decoration: none; font-size: 12.5px; font-weight: 500; color: var(--text-mid); background: var(--off-white); transition: all .2s; }
-    .quick-link:hover { border-color: var(--teal); color: var(--navy); background: white; }
-
-    .info-panel { width: 100%; max-width: 300px; animation: riseUp .55s .15s cubic-bezier(.22,.68,0,1.2) both; }
-    .info-card { background: var(--card); border-radius: 14px; padding: 22px; box-shadow: 0 4px 20px rgba(26,43,95,0.08); margin-bottom: 16px; }
-    .info-card h3 { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-    .dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; display: inline-block; }
-    .info-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--off-white); }
-    .info-item:last-child { border-bottom: none; }
-    .info-item-icon { width: 34px; height: 34px; flex-shrink: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .blue { background: rgba(0,158,180,0.1); } .navy2 { background: rgba(26,43,95,0.08); } .redg { background: rgba(192,57,43,0.08); } .goldg { background: rgba(232,160,32,0.1); }
-    .info-item-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
-    .info-item-text span { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
-    .help-card { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); border-radius: 14px; padding: 22px 24px; color: white; }
-    .help-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .help-card p  { font-size: 12px; opacity: .7; margin-bottom: 12px; }
-    .help-number  { font-size: 20px; font-weight: 700; color: var(--teal-light); margin-bottom: 10px; }
-    .help-card a  { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; text-decoration: none; font-size: 12px; font-weight: 500; margin-right: 6px; margin-bottom: 4px; }
-    .help-card a:hover { background: rgba(255,255,255,0.25); }
-
-    /* Dashboard */
-    #dashboard { display: none; animation: riseUp .5s ease both; }
-    .dash-header { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); color: white; padding: 30px 36px; }
-    .dash-header h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 4px; }
-    .dash-header p  { font-size: 13px; opacity: .7; }
-    .dash-body { padding: 30px 36px; max-width: 780px; margin: 0 auto; }
-    .dash-card { background: white; border-radius: 14px; padding: 22px 24px; margin-bottom: 18px; box-shadow: 0 4px 18px rgba(26,43,95,0.09); }
-    .dash-card h3 { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .user-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--off-white); font-size: 14px; }
-    .user-row:last-child { border-bottom: none; }
-    .user-row .key { color: var(--text-soft); font-weight: 500; }
-    .user-row .val { color: var(--text-dark); font-weight: 600; }
-    .users-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .users-table th { background: var(--off-white); padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-mid); }
-    .users-table td { padding: 10px 12px; border-bottom: 1px solid var(--off-white); }
-    .users-table tr:last-child td { border-bottom: none; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: rgba(0,158,180,0.12); color: var(--teal); }
-    .btn-logout { padding: 10px 22px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; color: white; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
-    .btn-logout:hover { background: rgba(255,255,255,0.25); }
-    .btn-delete { padding: 5px 12px; background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.2); border-radius: 6px; color: var(--red); font-size: 12px; cursor: pointer; transition: all .2s; }
-    .btn-delete:hover { background: var(--red); color: white; }
-
-    footer { background: var(--navy); color: rgba(168,196,240,0.7); text-align: center; padding: 18px; font-size: 12px; }
-    footer a { color: var(--teal-light); text-decoration: none; margin: 0 10px; }
-
-    @media (max-width: 600px) {
-      header { padding: 12px 16px; } nav { display: none; }
-      main { padding: 0 14px 36px; } .alert-banner { margin: 14px 14px; }
-      .login-card { padding: 26px 18px; } .info-panel { max-width: 100%; }
-      .dash-body { padding: 18px 14px; } .dash-header { padding: 22px 16px; }
+    .player-wrap {
+      width: 100%;
+      max-width: 780px;
+      animation: fadeUp 0.5s ease both;
     }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .session-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .end-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1.5px solid var(--danger);
+      color: var(--danger);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.1s, box-shadow 0.2s;
+    }
+
+    .end-btn:hover {
+      background: var(--danger);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(255,71,87,0.4);
+    }
+
+    .end-btn:active { transform: scale(0.96); }
+
+    .end-btn svg { transition: transform 0.2s; }
+    .end-btn:hover svg { transform: rotate(90deg); }
+
+    /* ── Video Stage ── */
+    .stage {
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+      aspect-ratio: 16/9;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    /* Placeholder shown when no src */
+    .placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #0d0d18 0%, #111120 100%);
+    }
+
+    .placeholder svg { opacity: 0.25; }
+
+    .placeholder-text {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* Big play overlay */
+    .big-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .stage:hover .big-play,
+    .stage.paused .big-play { opacity: 1; pointer-events: auto; }
+
+    .big-play-btn {
+      width: 68px; height: 68px;
+      background: rgba(232,255,71,0.12);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .big-play-btn:hover {
+      transform: scale(1.1);
+      background: rgba(232,255,71,0.22);
+    }
+
+    /* ── Controls Bar ── */
+    .controls {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 14px 18px 16px;
+    }
+
+    /* Progress */
+    .progress-wrap {
+      position: relative;
+      height: 4px;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-buf {
+      height: 100%;
+      background: #2a2a3a;
+      border-radius: 4px;
+      transition: width 0.3s;
+      position: absolute; top: 0; left: 0;
+    }
+
+    .progress-fill {
+      height: 4px;
+      background: var(--accent);
+      border-radius: 4px;
+      position: absolute; top: 0; left: 0;
+      transition: width 0.1s;
+    }
+
+    .progress-thumb {
+      width: 14px; height: 14px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%; transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px rgba(232,255,71,0.5);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .progress-wrap:hover .progress-thumb { opacity: 1; }
+
+    input[type=range] {
+      position: absolute; inset: -6px 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* Bottom row */
+    .ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .ctrl-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+    .ctrl-btn.active { color: var(--accent); }
+
+    .time-display {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .spacer { flex: 1; }
+
+    /* Volume */
+    .vol-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vol-slider-wrap {
+      width: 70px;
+      position: relative;
+      height: 4px;
+    }
+
+    .vol-track {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .vol-fill {
+      height: 100%;
+      background: var(--muted);
+      border-radius: 4px;
+      transition: width 0.1s, background 0.1s;
+    }
+
+    .vol-slider-wrap:hover .vol-fill { background: var(--accent); }
+
+    .vol-slider-wrap input[type=range] { position: absolute; inset: -6px 0; opacity: 0; cursor: pointer; width: 100%; }
+
+    /* Upload CTA */
+    .upload-zone {
+      margin-top: 16px;
+      border: 1.5px dashed var(--border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--accent);
+      background: rgba(232,255,71,0.03);
+    }
+
+    .upload-zone input { display: none; }
+
+    .upload-info { display: flex; align-items: center; gap: 10px; }
+
+    .upload-text {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .upload-text strong { color: var(--text); font-weight: 500; }
+
+    .upload-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* End session overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .overlay.show { opacity: 1; pointer-events: auto; }
+
+    .dialog {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px 40px;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+    }
+
+    .overlay.show .dialog { transform: scale(1); }
+
+    .dialog-icon {
+      width: 56px; height: 56px;
+      background: rgba(255,71,87,0.1);
+      border: 1.5px solid var(--danger);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .dialog h2 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .dialog p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .dialog-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-cancel:hover { background: var(--border); }
+
+    .btn-end {
+      flex: 1;
+      padding: 12px;
+      background: var(--danger);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-end:hover { opacity: 0.88; }
+    .btn-end:active { transform: scale(0.97); }
+
+    /* Ended state */
+    .ended-state {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .ended-state.show { opacity: 1; pointer-events: auto; }
+
+    .ended-state h3 {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .ended-state p { font-size: 14px; color: var(--muted); }
+
+    .replay-btn {
+      margin-top: 8px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    .replay-btn:hover { opacity: 0.85; transform: scale(1.04); }
   </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
+<div class="player-wrap">
 
-<div class="ticker-wrap">
-  <div class="ticker-track">
-    <span>🔒 SBI never asks for your PIN or OTP. Do not share with anyone.</span>
-    <span>📢 New: YONO Cash – Withdraw without a card at SBI ATMs.</span>
-    <span>🏦 Enhanced cybersecurity for all net banking users.</span>
-    <span>📱 Download YONO SBI app for seamless mobile banking.</span>
-    <span>🔒 SBI never asks for your PIN or OTP. Do not share with anyone.</span>
-    <span>📢 New: YONO Cash – Withdraw without a card at SBI ATMs.</span>
-    <span>🏦 Enhanced cybersecurity for all net banking users.</span>
-    <span>📱 Download YONO SBI app for seamless mobile banking.</span>
+  <!-- Header -->
+  <div class="header">
+    <div class="session-label">
+      <span class="dot"></span>
+      Session Active
+    </div>
+    <button class="end-btn" id="endBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      End Session
+    </button>
+  </div>
+
+  <!-- Stage -->
+  <div class="stage paused" id="stage">
+    <video id="vid"></video>
+
+    <!-- Placeholder -->
+    <div class="placeholder" id="placeholder">
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#e8e8f0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      <span class="placeholder-text">Load a video to begin</span>
+    </div>
+
+    <!-- Big play/pause overlay -->
+    <div class="big-play" id="bigPlay">
+      <div class="big-play-btn" id="bigPlayBtn">
+        <svg id="bigPlayIcon" width="26" height="26" viewBox="0 0 24 24" fill="var(--accent)" stroke="none">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Ended overlay -->
+    <div class="ended-state" id="endedState">
+      <h3>Playback complete</h3>
+      <p>Your video has finished playing.</p>
+      <button class="replay-btn" id="replayBtn">↺ Replay</button>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+
+    <!-- Progress -->
+    <div class="progress-wrap" id="progWrap">
+      <div class="progress-track">
+        <div class="progress-buf" id="progBuf" style="width:0%"></div>
+        <div class="progress-fill" id="progFill" style="width:0%"></div>
+      </div>
+      <div class="progress-thumb" id="progThumb" style="left:0%"></div>
+      <input type="range" id="seekSlider" min="0" max="100" value="0" step="0.1"/>
+    </div>
+
+    <!-- Buttons row -->
+    <div class="ctrl-row">
+
+      <!-- Play/Pause -->
+      <button class="ctrl-btn" id="playBtn" title="Play / Pause">
+        <svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </button>
+
+      <!-- Skip back -->
+      <button class="ctrl-btn" id="skipBack" title="-10s">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.32"/>
+        </svg>
+      </button>
+
+      <!-- Skip forward -->
+      <button class="ctrl-btn" id="skipFwd" title="+10s">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.32"/>
+        </svg>
+      </button>
+
+      <!-- Time -->
+      <span class="time-display" id="timeDis">0:00 / 0:00</span>
+
+      <div class="spacer"></div>
+
+      <!-- Volume -->
+      <div class="vol-group">
+        <button class="ctrl-btn" id="muteBtn" title="Mute">
+          <svg id="volIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+        </button>
+        <div class="vol-slider-wrap">
+          <div class="vol-track"><div class="vol-fill" id="volFill" style="width:100%"></div></div>
+          <input type="range" id="volSlider" min="0" max="1" step="0.02" value="1"/>
+        </div>
+      </div>
+
+      <!-- Fullscreen -->
+      <button class="ctrl-btn" id="fsBtn" title="Fullscreen">
+        <svg id="fsIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+          <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Upload zone -->
+  <label class="upload-zone" id="uploadZone">
+    <input type="file" id="fileInput" accept="video/*"/>
+    <div class="upload-info">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <div>
+        <div class="upload-text"><strong>Click to load video</strong> or drag & drop</div>
+        <div class="upload-hint">MP4 · MOV · WEBM · MKV</div>
+      </div>
+    </div>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  </label>
+
+</div>
+
+<!-- End Session Dialog -->
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <div class="dialog-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </div>
+    <h2>End this session?</h2>
+    <p>Your current playback progress will be lost and the session will be closed.</p>
+    <div class="dialog-btns">
+      <button class="btn-cancel" id="cancelBtn">Cancel</button>
+      <button class="btn-end" id="confirmEnd">End Session</button>
+    </div>
   </div>
 </div>
 
-<header>
-  <div class="logo-block">
-    <div class="logo-circle">S</div>
-    <div class="logo-text">
-      <div style="display:flex;align-items:baseline;gap:4px;">
-        <span class="yono">Yono</span><span class="sbi">SBI</span>
-      </div>
-      <span class="sub">Net Banking</span>
-    </div>
-  </div>
-  <nav>
-    <a href="#">Personal</a><a href="#">Corporate</a><a href="#">NRI</a><a href="#">Locate Us</a><a href="#">Help</a>
-  </nav>
-</header>
+<script>
+  const vid = document.getElementById('vid');
+  const stage = document.getElementById('stage');
+  const placeholder = document.getElementById('placeholder');
+  const bigPlay = document.getElementById('bigPlay');
+  const bigPlayBtn = document.getElementById('bigPlayBtn');
+  const bigPlayIcon = document.getElementById('bigPlayIcon');
+  const playBtn = document.getElementById('playBtn');
+  const playIcon = document.getElementById('playIcon');
+  const seekSlider = document.getElementById('seekSlider');
+  const progFill = document.getElementById('progFill');
+  const progBuf  = document.getElementById('progBuf');
+  const progThumb = document.getElementById('progThumb');
+  const timeDis = document.getElementById('timeDis');
+  const volSlider = document.getElementById('volSlider');
+  const volFill = document.getElementById('volFill');
+  const muteBtn = document.getElementById('muteBtn');
+  const volIcon = document.getElementById('volIcon');
+  const fsBtn = document.getElementById('fsBtn');
+  const skipBack = document.getElementById('skipBack');
+  const skipFwd = document.getElementById('skipFwd');
+  const fileInput = document.getElementById('fileInput');
+  const uploadZone = document.getElementById('uploadZone');
+  const endBtn = document.getElementById('endBtn');
+  const overlay = document.getElementById('overlay');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const confirmEnd = document.getElementById('confirmEnd');
+  const endedState = document.getElementById('endedState');
+  const replayBtn = document.getElementById('replayBtn');
 
-<!-- AUTH SECTION -->
-<div id="authSection">
-  <div class="alert-banner">
-    <span style="font-size:18px;flex-shrink:0;">⚠️</span>
-    <div><strong>Security Reminder:</strong> SBI never asks for your PIN, OTP, or Password. Any such call is from a fraudster. <strong>Do not share personal info.</strong></div>
-  </div>
+  const PLAY_SVG  = `<polygon points="5 3 19 12 5 21 5 3"/>`;
+  const PAUSE_SVG = `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`;
+  const VOL_SVG   = `<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>`;
+  const MUTE_SVG  = `<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>`;
 
-  <main>
-    <div class="login-card">
-      <div class="card-header">
-        <div class="tag" id="cardTag">Personal Banking</div>
-        <h2 id="cardTitle">Welcome Back</h2>
-        <p id="cardSub">Sign in to your SBI Net Banking account</p>
-      </div>
+  function fmt(s) {
+    s = Math.floor(s || 0);
+    const m = Math.floor(s / 60), sec = s % 60;
+    return `${m}:${sec.toString().padStart(2,'0')}`;
+  }
 
-      <div class="mode-row">
-        <button class="mode-btn active" id="btnLogin" onclick="setMode('login')">Login</button>
-        <button class="mode-btn" id="btnRegister" onclick="setMode('register')">New Registration</button>
-      </div>
+  function updatePlayIcon(paused) {
+    const svg = `<svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">${paused ? PLAY_SVG : PAUSE_SVG}</svg>`;
+    playBtn.innerHTML = svg;
+    bigPlayIcon.innerHTML = paused ? PLAY_SVG : PAUSE_SVG;
+    stage.classList.toggle('paused', paused);
+  }
 
-      <!-- LOGIN -->
-      <div id="loginForm">
-        <div class="form-group">
-          <label>Username / Customer ID</label>
-          <div class="input-wrap">
-            <span class="input-icon">👤</span>
-            <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="username"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <div class="input-wrap">
-            <span class="input-icon">🔑</span>
-            <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password"/>
-            <button type="button" class="eye-btn" onclick="togglePwd('loginPass',this)">👁️</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Enter Captcha</label>
-          <div class="captcha-row">
-            <div class="captcha-box" id="loginCaptchaBox"></div>
-            <button type="button" class="refresh-btn" onclick="refreshCaptcha('loginCaptchaBox')">🔄</button>
-            <div class="input-wrap captcha-input">
-              <span class="input-icon">🔠</span>
-              <input type="text" id="loginCaptcha" placeholder="Type captcha" maxlength="6"/>
-            </div>
-          </div>
-        </div>
-        <div class="row-between">
-          <label class="checkbox-label"><input type="checkbox" id="rememberMe" onchange="handleRemember()"/> Remember me</label>
-          <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot Password?</a>
-        </div>
-        <button class="btn-submit" onclick="doLogin()">Login →</button>
-        <div class="divider">quick access</div>
-        <div class="quick-links">
-          <a class="quick-link" href="#" onclick="setMode('register');return false;">✏️ New Registration</a>
-          <a class="quick-link" href="#">❓ How Do I?</a>
-          <a class="quick-link" href="#">🎧 Customer Care</a>
-          <a class="quick-link" href="#">🔓 Lock / Unlock</a>
-        </div>
-      </div>
+  function togglePlay() {
+    if (!vid.src) return;
+    vid.paused ? vid.play() : vid.pause();
+  }
 
-      <!-- REGISTER -->
-      <div id="registerForm" style="display:none;">
-        <div class="form-group">
-          <label>Full Name</label>
-          <div class="input-wrap">
-            <span class="input-icon">🧑</span>
-            <input type="text" id="regName" placeholder="Enter your full name"/>
-          </div>
-        </div>
+  vid.addEventListener('play',  () => updatePlayIcon(false));
+  vid.addEventListener('pause', () => updatePlayIcon(true));
+
+  vid.addEventListener('timeupdate', () => {
+    const pct = vid.duration ? (vid.currentTime / vid.duration) * 100 : 0;
+    progFill.style.width = pct + '%';
+    progThumb.style.left = pct + '%';
+    seekSlider.v        </div>
         <div class="form-group">
           <label>Email Address</label>
           <div class="input-wrap">
